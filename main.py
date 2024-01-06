@@ -68,8 +68,41 @@ def pieInput(message):
     plt.close()
     bot.send_photo(message.chat.id, piePhoto, 'Вот диаграмма по данным значениям')
 
+@bot.message_handler(commands=["analysis"])
+def analysis(message):
+    bot.send_message(message.chat.id, "Введите числовой ряд разделяя числа пробелом")
+    bot.register_next_step_handler(message, analysisInput)
+
+def analysisInput(message):
+    data = list(map(int, message.text.split(" ")))
+    data = sorted(data)
+    average = sum(data) / len(data)
+
+    if len(data) % 2 == 0:
+        median = (data[(len(data)-1)//2] + data[(len(data)+1)//2]) / 2
+    else:
+        median = data[(len(data))//2]
+
+    fashion = max(set(data), key=data.count)
+
+    deviation = []
+    deviation_square = []
+
+    for i in data:
+        deviation.append(i-average)
+        deviation_square.append((i-average)**2)
+
+    dispersion = sum(deviation_square) / len(deviation_square)
+
+    bot.send_message(message.chat.id, f"Среднее арифметическое ряда: {average}\n"
+                                      f"Медиана ряда: {median}\n"
+                                      f"Мода ряда: {fashion}\n"
+                                      f"Отклонения ряда {deviation}\n"
+                                      f"Квадрат отклонений ряда {deviation_square}\n"
+                                      f"Дисперсяи ряда: {dispersion}\n")
+
 @bot.message_handler(commands=["info"])
-def info(massage):
-    bot.send_message(massage.chat.id, massage)
+def info(message):
+    bot.send_message(message.chat.id, message)
 
 bot.polling(none_stop=True)
