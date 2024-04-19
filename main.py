@@ -1,7 +1,7 @@
 import telebot
 from matplotlib import pyplot as plt
 
-bot = telebot.TeleBot("6337924618:AAH6BkpbHEMeoYFui7-a6BYX3xKaUozbPfA")
+bot = telebot.TeleBot("Не покажу")
 
 @bot.message_handler(commands=["start", "старт"])
 def start(message):
